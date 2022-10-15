@@ -30,7 +30,7 @@ def get_distance(n1, n2):
     return dist
 
 
-def calc_distance(inputs):
+def calc_distance_nearest_neighbor(inputs):
     current = inputs[0]
     nodes_to_visit = inputs[1:]
     route = []
@@ -62,5 +62,5 @@ def calc_distance(inputs):
 
 if __name__ == "__main__":
     inputs = read_input_from_stdin()
-    route = calc_distance(inputs)
+    route = calc_distance_nearest_neighbor(inputs)
     print(route)
