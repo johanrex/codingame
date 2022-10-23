@@ -2,6 +2,7 @@
 # https://www.codingame.com/ide/puzzle/travelling-salesman
 
 from functools import cache
+from itertools import permutations
 import sys
 import math
 
@@ -60,7 +61,41 @@ def calc_distance_nearest_neighbor(inputs):
     return " ".join(indexes)
 
 
+def calc_distance_brute_force(inputs):
+    all_distances_and_routes = []
+    start = inputs[0]
+    nodes_to_visit = inputs[1:]
+
+    ps = permutations(nodes_to_visit)
+    for p in ps:
+        current_route = [start, *p, start]
+        total_distance = 0
+
+        prev = None
+        for node in current_route:
+            if prev is None:
+                prev = node
+                continue
+            else:
+                d = get_distance(prev, node)
+                total_distance += d
+                prev = node
+
+        all_distances_and_routes.append([total_distance, current_route])
+
+    all_distances_and_routes.sort()
+    shortest_distance_route = all_distances_and_routes[0]
+    shortest_route = shortest_distance_route[1]
+
+    indexes = []
+    # translate to indexes
+    for node in shortest_route:
+        indexes.append(str(inputs.index(node)))
+
+    return " ".join(indexes)
+
+
 if __name__ == "__main__":
     inputs = read_input_from_stdin()
-    route = calc_distance_nearest_neighbor(inputs)
+    route = calc_distance_brute_force(inputs)
     print(route)
