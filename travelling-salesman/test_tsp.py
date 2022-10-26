@@ -17,3 +17,4 @@ def test_tsp_brute_force():
 
 if __name__ == "__main__":
     test_tsp_brute_force()
+
