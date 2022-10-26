@@ -27,6 +27,20 @@ def read_input_from_stdin():
     return inputs
 
 
+def route_cost(route):
+    total_cost = 0
+    first = True
+    prev = None
+    for curr in route:
+        if first:
+            first = False
+        else:
+            total_cost += get_distance(prev, curr)
+        prev = curr
+
+    return total_cost
+
+
 def calc_distance_brute_force(inputs):
     all_distances_and_routes = []
     start = inputs[0]
@@ -35,17 +49,7 @@ def calc_distance_brute_force(inputs):
     ps = permutations(nodes_to_visit)
     for p in ps:
         current_route = [start, *p, start]
-        total_distance = 0
-
-        prev = None
-        for node in current_route:
-            if prev is None:
-                prev = node
-                continue
-            else:
-                d = get_distance(prev, node)
-                total_distance += d
-                prev = node
+        total_distance = route_cost(current_route)
 
         all_distances_and_routes.append([total_distance, current_route])
 

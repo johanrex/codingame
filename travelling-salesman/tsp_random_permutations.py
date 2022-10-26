@@ -27,6 +27,7 @@ def calc_distance_random_permutations(inputs):
                 continue
             else:
                 total_distance += spatial.distance.euclidean(prev, curr)
+            prev = curr
         return total_distance
 
     memo = {}

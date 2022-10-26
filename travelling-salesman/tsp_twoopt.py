@@ -68,9 +68,9 @@ class CostCache:
         for curr in route:
             if first:
                 first = False
-                prev = curr
             else:
                 total_cost += self.cost_lookup(prev, curr)
+            prev = curr
 
         return total_cost
 
