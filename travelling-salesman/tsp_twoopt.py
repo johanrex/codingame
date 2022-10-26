@@ -42,7 +42,7 @@ class CostCache:
                 else:
                     cost = CostCache.__calc_cost(n1, n2)
 
-                log(f"{n1} -> {n2} cost: {cost}. Putting at place x:{x} y:{y}.")
+                # log(f"{n1} -> {n2} cost: {cost}. Putting at place x:{x} y:{y}.")
 
                 self.costs[x][y] = cost
 
@@ -95,6 +95,8 @@ def two_opt_swap(route, i, j):
 
 def tsp_two_opt(inputs):
 
+    log(inputs)
+
     cost_cache = CostCache(inputs)
 
     # Add path back to start.
@@ -126,6 +128,7 @@ def tsp_two_opt(inputs):
 if __name__ == "__main__":
     inputs = read_input_from_stdin()
     best_cost, indexes = tsp_two_opt(inputs)
+    print(" ".join(indexes))
 
 
 # TODO random ordering of the nodes at start
