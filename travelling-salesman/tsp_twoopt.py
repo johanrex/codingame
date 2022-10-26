@@ -6,6 +6,16 @@ def log(msg):
     print(msg, file=sys.stderr, flush=True)
 
 
+def read_input_from_stdin():
+    inputs = []
+    n = int(input())
+    for i in range(n):
+        coord = tuple((int(j) for j in input().split()))
+        inputs.append(coord)
+
+    return inputs
+
+
 class CostCache:
     def __init__(self, inputs) -> None:
         self.inputs = inputs
@@ -66,40 +76,56 @@ class CostCache:
 
 
 def two_opt_swap(route, i, j):
-    new_route = []
 
     # 1. take route[0] to route[v1] and add them in order to new_route
-    new_route.append(route[0 : i + 1])
+    new_route = route[0 : i + 1]
 
     # 2. take route[v1+1] to route[v2] and add them in reverse order to new_route
-    new_route.append(route[i + 1 : j + 1].reverse())
+    tmp = route[i + 1 : j + 1]
+    if len(tmp) > 0:
+        new_route.extend(reversed(tmp))
 
     # 3. take route[v2+1] to route[end] and add them in order to new_route
-    new_route.append(route[j + 1 :])
+    new_route.extend(route[j + 1 :])
+
+    assert None not in new_route
 
     return new_route
 
 
-inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+def tsp_two_opt(inputs):
 
-cost_cache = CostCache(inputs)
+    cost_cache = CostCache(inputs)
 
-# Add path back to start.
-existing_route = [*inputs, inputs[0]]
+    # Add path back to start.
+    best_route = [*inputs, inputs[0]]
 
-best_cost = cost_cache.route_cost(existing_route)
-nr_of_nodes_to_swap = len(existing_route) - 1  # Don't swap first and last node in route.
-improvement = True
-while improvement:
-    improvement = False
-    for i in range(1, nr_of_nodes_to_swap):
-        for j in range(i, nr_of_nodes_to_swap):
-            new_route = two_opt_swap(existing_route, i, j)
-            new_cost = cost_cache.route_cost(new_route)  # TODO optimize
-            if new_cost < best_cost:
-                existing_route = new_route
-                best_cost = new_cost
-                improvement = True
+    best_cost = cost_cache.route_cost(best_route)
+    nr_of_nodes_to_swap = len(best_route) - 1  # Don't swap first and last node in route.
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, nr_of_nodes_to_swap):
+            for j in range(i, nr_of_nodes_to_swap):
+                new_route = two_opt_swap(best_route, i, j)
+                new_cost = cost_cache.route_cost(new_route)  # TODO optimize
+                if new_cost < best_cost:
+                    best_route = new_route
+                    best_cost = new_cost
+                    improvement = True
+
+    # translate to indexes
+    indexes = []
+    for node in best_route:
+        node = tuple(node)
+        indexes.append(str(inputs.index(node)))
+
+    return best_cost, indexes
+
+
+if __name__ == "__main__":
+    inputs = read_input_from_stdin()
+    best_cost, indexes = tsp_two_opt(inputs)
 
 
 # TODO random ordering of the nodes at start

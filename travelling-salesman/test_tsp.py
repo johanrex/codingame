@@ -1,20 +1,47 @@
-import tsp
+import tsp_twoopt
+import tsp_bruteforce
+import tsp_random_permutations
+import tsp_nearest_neighbor
 
 
-def test_tsp_nearest_neighbor():
-
+def test_tsp_random_permutations():
     inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
-    route = tsp.calc_distance_nearest_neighbor(inputs)
-    assert "0 2 4 1 3 0" == route
-
-
-def test_tsp_brute_force():
-
-    inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
-    route = tsp.calc_distance_brute_force(inputs)
+    shortest_distance, indexes = tsp_random_permutations.calc_distance_random_permutations(inputs)
+    route = " ".join(indexes)
     assert "0 2 3 4 1" == route
 
 
-if __name__ == "__main__":
-    test_tsp_brute_force()
+def test_tsp_twoopt():
+    inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+    shortest_distance, indexes = tsp_twoopt.tsp_two_opt(inputs)
+    route = " ".join(indexes)
+    assert "0 2 3 4 1 0" == route
 
+
+def test_tsp_bruteforce():
+    inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+    shortest_distance, indexes = tsp_bruteforce.calc_distance_brute_force(inputs)
+    route = " ".join(indexes)
+    assert "0 2 3 4 1 0" == route
+
+
+def test_tsp_nearest_neighbor():
+    inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+    shortest_distance, indexes = tsp_nearest_neighbor.calc_distance_nearest_neighbor(inputs)
+    route = " ".join(indexes)
+    assert "0 2 4 1 3 0" == route
+
+
+if __name__ == "__main__":
+    # test_tsp_twoopt()
+    # test_tsp_random_permutations()
+
+    inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+
+    shortest_distance_bf, indexes_bf = tsp_bruteforce.calc_distance_brute_force(inputs)
+    shortest_distance_to, indexes_to = tsp_twoopt.tsp_two_opt(inputs)
+
+    pass
+
+    # inputs = [(485, 475), (1150, 750), (1008, 480), (1562, 134), (1155, 523)]
+    # best_cost, indexes = tsp_twoopt.tsp_two_opt()
