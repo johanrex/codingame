@@ -58,10 +58,10 @@ def calc_distance_brute_force(inputs):
     shortest_distance = shortest_distance_route[0]
     shortest_route = shortest_distance_route[1]
 
-    indexes = []
     # translate to indexes
+    indexes = []
     for node in shortest_route:
-        indexes.append(str(inputs.index(node)))
+        indexes.append(inputs.index(node))
 
     return shortest_distance, indexes
 
@@ -69,4 +69,4 @@ def calc_distance_brute_force(inputs):
 if __name__ == "__main__":
     inputs = read_input_from_stdin()
     shortest_distance, indexes = calc_distance_brute_force(inputs)
-    print(" ".join(indexes))
+    print(*indexes)

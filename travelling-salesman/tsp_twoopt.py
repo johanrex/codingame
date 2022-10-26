@@ -95,6 +95,7 @@ def two_opt_swap(route, i, j):
 
 def tsp_two_opt(inputs):
 
+    log("Using this input:")
     log(inputs)
 
     cost_cache = CostCache(inputs)
@@ -103,12 +104,12 @@ def tsp_two_opt(inputs):
     best_route = [*inputs, inputs[0]]
 
     best_cost = cost_cache.route_cost(best_route)
-    nr_of_nodes_to_swap = len(best_route) - 1  # Don't swap first and last node in route.
+    nr_of_nodes_to_swap = len(best_route) - 2  # Don't swap first and last node in route.
     improvement = True
     while improvement:
         improvement = False
-        for i in range(1, nr_of_nodes_to_swap):
-            for j in range(i, nr_of_nodes_to_swap):
+        for i in range(1, nr_of_nodes_to_swap + 1):
+            for j in range(i, nr_of_nodes_to_swap + 1):
                 new_route = two_opt_swap(best_route, i, j)
                 new_cost = cost_cache.route_cost(new_route)  # TODO optimize
                 if new_cost < best_cost:
@@ -120,7 +121,7 @@ def tsp_two_opt(inputs):
     indexes = []
     for node in best_route:
         node = tuple(node)
-        indexes.append(str(inputs.index(node)))
+        indexes.append(inputs.index(node))
 
     return best_cost, indexes
 
@@ -128,7 +129,7 @@ def tsp_two_opt(inputs):
 if __name__ == "__main__":
     inputs = read_input_from_stdin()
     best_cost, indexes = tsp_two_opt(inputs)
-    print(" ".join(indexes))
+    print(*indexes)
 
 
 # TODO random ordering of the nodes at start
