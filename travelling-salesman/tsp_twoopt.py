@@ -94,7 +94,7 @@ def two_opt_swap(route, i, j):
     return new_route
 
 
-def tsp_two_opt(inputs, randomize=False, iterations=20):
+def tsp_two_opt(inputs, randomize=False, iterations=5):
 
     log("Using this input:")
     log(inputs)
@@ -112,9 +112,10 @@ def tsp_two_opt(inputs, randomize=False, iterations=20):
     nr_of_nodes = len(best_route)
 
     best_cost = cost_cache.route_cost(best_route)
-    improve_cnt = 0
-    while improve_cnt < iterations:
+    improvement = True
+    while improvement:
         log("Starting new iteration.")
+        improvement = False
         for i in range(1, nr_of_nodes - 2):
             for j in range(i + 1, nr_of_nodes - 1):
                 if j - i == 1:
@@ -128,8 +129,7 @@ def tsp_two_opt(inputs, randomize=False, iterations=20):
                     best_route = new_route
                     best_cost = new_cost
                     log(f"Found new best cost: {best_cost}.")
-                    improve_cnt = 0  # reset counter when new best cost found
-        improve_cnt += 1
+                    improvement = True
 
     # translate to indexes
     indexes = []
