@@ -114,6 +114,8 @@ def tsp_two_opt(inputs, randomize=False):
     best_cost = cost_cache.route_cost(best_route)
     improvement = True
 
+    # TODO improve by running it several times and randomizing the middle every time.
+
     while improvement:
         # log("Starting new iteration.")
         improvement = False
@@ -144,6 +146,3 @@ if __name__ == "__main__":
     inputs = read_input_from_stdin()
     best_cost, indexes = tsp_two_opt(inputs)
     print(*indexes)
-
-
-# TODO random ordering of the nodes at start
