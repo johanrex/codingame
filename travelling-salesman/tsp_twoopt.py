@@ -1,5 +1,6 @@
 import sys
 import math
+import random
 
 
 def log(msg):
@@ -22,9 +23,9 @@ class CostCache:
         self.cost = None
         self.tpl_to_idx = {}
 
-        self.__cost_lookup_init(inputs)
+        self.__cost_lookup_init()
 
-    def __cost_lookup_init(self, inputs):
+    def __cost_lookup_init(self):
         length = len(self.inputs)
         self.costs = [[None for i in range(length)] for j in range(length)]  # Init empty 2D array.
 
@@ -93,24 +94,37 @@ def two_opt_swap(route, i, j):
     return new_route
 
 
-def tsp_two_opt(inputs):
+def tsp_two_opt(inputs, randomize=False:
 
-    log("Using this input:")
-    log(inputs)
+    # log("Using this input:")
+    # log(inputs)
 
     cost_cache = CostCache(inputs)
 
-    # Add path back to start.
-    best_route = [*inputs, inputs[0]]
+    # Remove start node.
+    middle = inputs[1:]
+
+    if randomize:
+        random.shuffle(middle)
+
+    best_route = [inputs[0], *middle, inputs[0]]
+
+    nr_of_nodes = len(best_route)
 
     best_cost = cost_cache.route_cost(best_route)
-    nr_of_nodes_to_swap = len(best_route) - 2  # Don't swap first and last node in route.
     improvement = True
     while improvement:
         improvement = False
-        for i in range(1, nr_of_nodes_to_swap + 1):
-            for j in range(i, nr_of_nodes_to_swap + 1):
+
+        for i in range(1, nr_of_nodes - 2):
+            for j in range(i + 1, nr_of_nodes - 1):
+                if j - i == 1:
+                    continue
                 new_route = two_opt_swap(best_route, i, j)
+                assert len(new_route) == len(best_route)
+                assert best_route[0] == new_route[0] and best_route[-1] == new_route[-1]
+
+                # print(new_route)
                 new_cost = cost_cache.route_cost(new_route)  # TODO optimize
                 if new_cost < best_cost:
                     best_route = new_route

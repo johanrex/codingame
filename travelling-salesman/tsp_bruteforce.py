@@ -49,6 +49,7 @@ def calc_distance_brute_force(inputs):
     ps = permutations(nodes_to_visit)
     for p in ps:
         current_route = [start, *p, start]
+        # print(current_route)
         total_distance = route_cost(current_route)
 
         all_distances_and_routes.append([total_distance, current_route])
