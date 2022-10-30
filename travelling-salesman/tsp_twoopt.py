@@ -78,15 +78,15 @@ class CostCache:
 
 def two_opt_swap(route, i, j):
 
-    # 1. take route[0] to route[v1] and add them in order to new_route
-    new_route = route[0 : i + 1]
+    # 1. take route[0] to route[i-1] and add them in order to new_route
+    new_route = route[0:i]
 
-    # 2. take route[v1+1] to route[v2] and add them in reverse order to new_route
-    tmp = route[i + 1 : j + 1]
+    # 2. take route[i] to route[j] and add them in reverse order to new_route
+    tmp = route[i : j + 1]
     if len(tmp) > 0:
         new_route.extend(reversed(tmp))
 
-    # 3. take route[v2+1] to route[end] and add them in order to new_route
+    # 3. take route[j+1] to end and add them in order to new_route
     new_route.extend(route[j + 1 :])
 
     assert None not in new_route
@@ -94,7 +94,7 @@ def two_opt_swap(route, i, j):
     return new_route
 
 
-def tsp_two_opt(inputs, randomize=False, iterations=5):
+def tsp_two_opt(inputs, randomize=False):
 
     log("Using this input:")
     log(inputs)
@@ -113,22 +113,22 @@ def tsp_two_opt(inputs, randomize=False, iterations=5):
 
     best_cost = cost_cache.route_cost(best_route)
     improvement = True
+
     while improvement:
-        log("Starting new iteration.")
+        # log("Starting new iteration.")
         improvement = False
         for i in range(1, nr_of_nodes - 2):
             for j in range(i + 1, nr_of_nodes - 1):
-                if j - i == 1:
-                    continue
-                new_route = two_opt_swap(best_route, i, j)
-                assert len(new_route) == len(best_route)
-                assert best_route[0] == new_route[0] and best_route[-1] == new_route[-1]
 
-                new_cost = cost_cache.route_cost(new_route)  # TODO optimize
-                if new_cost < best_cost:
-                    best_route = new_route
-                    best_cost = new_cost
-                    log(f"Found new best cost: {best_cost}.")
+                cost_best_tmp = cost_cache.cost_lookup(best_route[i - 1], best_route[i]) + cost_cache.cost_lookup(best_route[j], best_route[j + 1])
+                cost_swapped_tmp = cost_cache.cost_lookup(best_route[i - 1], best_route[j]) + cost_cache.cost_lookup(best_route[i], best_route[j + 1])
+                cost_diff = cost_swapped_tmp - cost_best_tmp
+
+                if cost_diff < 0:
+                    best_route = two_opt_swap(best_route, i, j)
+                    best_cost = best_cost + cost_diff
+
+                    # log(f"Found new best cost: {best_cost}.")
                     improvement = True
 
     # translate to indexes
