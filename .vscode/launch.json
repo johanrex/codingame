@@ -19,6 +19,19 @@
             "program": "travelling-salesman/test_tsp.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Python: current file with profiler",
+            "type": "python",
+            "request": "launch",
+            "module": "cProfile",
+            "console": "integratedTerminal",
+            "args": [
+                "-o",
+                "c:/temp/profile.prof",
+                "${file}"
+            ],
+            "justMyCode": true
         }
     ]
 }
