@@ -114,7 +114,8 @@ def tsp_two_opt(inputs, randomize=False):
     best_cost = cost_cache.route_cost(best_route)
     improvement = True
 
-    # TODO improve by running it several times and randomizing the middle every time.
+    # TODO Order according to nearest neighbor first? I guess it depends on the input if it's an improvement.
+    # TODO Improve by running it several times and randomizing the middle every time.
 
     while improvement:
         # log("Starting new iteration.")
