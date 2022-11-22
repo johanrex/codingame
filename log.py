@@ -1,4 +1,6 @@
-def log(msg):
+def log(*objects):
     import sys
 
-    print(msg, file=sys.stderr, flush=True)
+    for obj in objects:
+        print(obj, file=sys.stderr, end="", flush=True)
+    print("")
