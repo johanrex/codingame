@@ -19,12 +19,12 @@ def main():
 
     solution = Solution(n)
 
-    for i in range(l):
+    for _ in range(l):
         # n1, n2 defines a link between these nodes
         n1, n2 = [int(j) for j in input().split()]
         solution.add_link(n1, n2)
 
-    for i in range(e):
+    for _ in range(e):
         ei = int(input())  # the index of a gateway node
         solution.add_exit_gateway(ei)
 

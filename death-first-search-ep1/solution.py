@@ -25,8 +25,8 @@ class Solution:
         for eg in self.exit_gateways:
             all_paths.extend(self.g.get_paths(agent_idx, eg))
 
-        tmp = all_paths[0]
-        u, v = tmp[0], tmp[1]
+        shortest_path = sorted(all_paths, key=len)[0]
+        u, v = shortest_path[0], shortest_path[1]
 
         self.g.remove_edge(u, v)
 
