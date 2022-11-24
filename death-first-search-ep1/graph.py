@@ -1,10 +1,4 @@
-import collections
 from typing import Self
-from enum import Enum
-
-
-# agent, gateway.
-
 
 # Directed graph
 class Graph:
@@ -22,6 +16,10 @@ class Graph:
         # TODO make sure it's not already added.
         self.edges[u].append(v)
         self.edges[v].append(u)
+
+    def remove_edge(self, u, v):
+        self.edges[u].remove(v)
+        self.edges[v].remove(u)
 
     def __get_paths(self, paths, path, u, v):
         path = path + [u]

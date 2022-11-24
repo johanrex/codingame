@@ -13,25 +13,16 @@
             "justMyCode": true
         },
         {
-            "name": "Python: one particular file",
+            "name": "Python: Current File with stdin",
             "type": "python",
             "request": "launch",
-            "program": "travelling-salesman/test_tsp.py",
+            "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true
-        },
-        {
-            "name": "Python: current file with profiler",
-            "type": "python",
-            "request": "launch",
-            "module": "cProfile",
-            "console": "integratedTerminal",
+            "justMyCode": true,
             "args": [
-                "-o",
-                "c:/temp/profile.prof",
-                "${file}"
+                "<",
+                "${workspaceFolder}/input"
             ],
-            "justMyCode": true
-        }
+        },
     ]
 }

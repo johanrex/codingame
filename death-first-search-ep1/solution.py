@@ -14,6 +14,9 @@ class Solution:
     def add_link(self, n1, n2):
         self.g.add_edge(n1, n2)
 
+    def remove_link(self, n1, n2):
+        self.g.remove_edge(n1, n2)
+
     def add_exit_gateway(self, e):
         self.exit_gateways.append(e)
 
@@ -24,4 +27,7 @@ class Solution:
 
         tmp = all_paths[0]
         u, v = tmp[0], tmp[1]
+
+        self.g.remove_edge(u, v)
+
         return u, v

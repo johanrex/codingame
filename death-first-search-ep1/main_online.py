@@ -11,26 +11,31 @@ def log(*objects):
     print(*objects, file=sys.stderr, flush=True)
 
 
-# n: the total number of nodes in the level, including the gateways
-# l: the number of links
-# e: the number of exit gateways
-n, l, e = [int(i) for i in input().split()]
+def main():
+    # n: the total number of nodes in the level, including the gateways
+    # l: the number of links
+    # e: the number of exit gateways
+    n, l, e = [int(i) for i in input().split()]
 
-solution = Solution(n)
+    solution = Solution(n)
 
-for i in range(l):
-    # n1, n2 defines a link between these nodes
-    n1, n2 = [int(j) for j in input().split()]
-    solution.add_link(n1, n2)
+    for i in range(l):
+        # n1, n2 defines a link between these nodes
+        n1, n2 = [int(j) for j in input().split()]
+        solution.add_link(n1, n2)
 
-for i in range(e):
-    ei = int(input())  # the index of a gateway node
-    solution.add_exit_gateway(ei)
+    for i in range(e):
+        ei = int(input())  # the index of a gateway node
+        solution.add_exit_gateway(ei)
 
-# game loop
-while True:
-    si = int(input())  # The index of the node on which the Bobnet agent is positioned this turn
+    # game loop
+    while True:
+        si = int(input())  # The index of the node on which the Bobnet agent is positioned this turn
 
-    u, v = solution.cut(si)
-    # Example: 0 1 are the indices of the nodes you wish to sever the link between
-    print(u, v)
+        u, v = solution.cut(si)
+        # Example: 0 1 are the indices of the nodes you wish to sever the link between
+        print(u, v)
+
+
+if __name__ == "__main__":
+    main()
