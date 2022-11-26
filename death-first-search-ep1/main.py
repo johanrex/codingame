@@ -3,38 +3,40 @@
 
 
 from solution import Solution
-
-
-def log(*objects):
-    import sys
-
-    print(*objects, file=sys.stderr, flush=True)
+from log import log, logged_input
 
 
 def main():
     # n: the total number of nodes in the level, including the gateways
     # l: the number of links
     # e: the number of exit gateways
-    n, l, e = [int(i) for i in input().split()]
+    n, l, e = [int(i) for i in logged_input().split()]
 
     solution = Solution(n)
 
     for _ in range(l):
         # n1, n2 defines a link between these nodes
-        n1, n2 = [int(j) for j in input().split()]
+        n1, n2 = [int(j) for j in logged_input().split()]
         solution.add_link(n1, n2)
 
     for _ in range(e):
-        ei = int(input())  # the index of a gateway node
+        ei = int(logged_input())  # the index of a gateway node
         solution.add_exit_gateway(ei)
 
     # game loop
     while True:
-        si = int(input())  # The index of the node on which the Bobnet agent is positioned this turn
+        try:
+            si = int(logged_input())  # The index of the node on which the Bobnet agent is positioned this turn
+        except EOFError:
+            break
+
+        # graph.perf_counter = 0
 
         u, v = solution.cut(si)
+
+        # log("perf_counter:", graph.perf_counter)
         # Example: 0 1 are the indices of the nodes you wish to sever the link between
-        print(u, v)
+        print(u, v, flush=True)
 
 
 if __name__ == "__main__":

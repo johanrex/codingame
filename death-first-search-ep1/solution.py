@@ -1,4 +1,5 @@
 from graph import Graph
+from log import log
 
 
 class Solution:
@@ -21,11 +22,9 @@ class Solution:
         self.exit_gateways.append(e)
 
     def cut(self, agent_idx):
-        all_paths = []
-        for eg in self.exit_gateways:
-            all_paths.extend(self.g.get_paths(agent_idx, eg))
 
-        shortest_path = sorted(all_paths, key=len)[0]
+        shortest_path  = self.g.get_shortest_path(agent_idx, self.exit_gateways)
+
         u, v = shortest_path[0], shortest_path[1]
 
         self.g.remove_edge(u, v)

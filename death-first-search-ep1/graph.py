@@ -1,4 +1,6 @@
-from typing import Self
+import sys
+
+# perf_counter = 0
 
 # Directed graph
 class Graph:
@@ -21,30 +23,29 @@ class Graph:
         self.edges[u].remove(v)
         self.edges[v].remove(u)
 
-    def __get_paths(self, paths, path, u, v):
-        path = path + [u]
-        if u == v:
-            paths.append(path)
-        else:
-            for e in self.edges[u]:
-                if e not in path:
-                    self.__get_paths(paths, path, e, v)
+    def __get_shortest_path(self, shortest_path, current_path, u, vs):
+        # global perf_counter
+        # perf_counter += 1
 
-    def get_paths(self, u, v) -> list[object]:
+        current_path = current_path + [u]
+        if u in vs:
+            if len(shortest_path) == 0:
+                shortest_path.extend(current_path)
+            else:
+                if len(current_path) < len(shortest_path):
+                    shortest_path.clear()
+                    shortest_path.extend(current_path)
+        else:
+            if len(shortest_path) == 0 or len(current_path) < len(shortest_path):
+                for e in self.edges[u]:
+                    if e not in current_path:
+                        self.__get_shortest_path(shortest_path, current_path, e, vs)
+
+    def get_shortest_path(self, u, v) -> list[object]:
         # TODO check if u, v is in graph
         assert u != v
 
-        paths = []  # all paths leading from u to v
-        path = []
-        self.__get_paths(paths, path, u, v)
-        return paths
-
-
-class GraphNode:
-    def __init__(self, id) -> None:
-        self.id = id
-        self.tags = {}
-        self.edges = []
-
-    def add_edge(self, node: Self):
-        self.edges.append(node)
+        shortest_path = []  # all paths leading from u to v
+        current_path = []
+        self.__get_shortest_path(shortest_path, current_path, u, v)
+        return shortest_path
