@@ -2,7 +2,7 @@ r = input
 
 lx, ly, tx, ty = [int(i) for i in r().split()]
 
-while True:
+while 1:
     r()
 
     d = ""
