@@ -21,7 +21,7 @@
             "justMyCode": true,
             "args": [
                 "<",
-                "${workspaceFolder}/input"
+                "${workspaceFolder}/death-first-search-ep2/input.txt"
             ],
         },
     ]
