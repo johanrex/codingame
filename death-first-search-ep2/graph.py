@@ -2,11 +2,10 @@ import sys
 from log import log
 import typing
 
-# Directed graph
 class Graph:
     def __init__(self) -> None:
         self.nodes: list = []
-        self.edges: dict = {}
+        self.edges: dict[object, list] = {}
 
     def add_node(self, node):
         assert isinstance(node, typing.Hashable)
@@ -27,30 +26,27 @@ class Graph:
         self.edges[v].remove(u)
 
     def bfs(self, src):
-        nr_of_nodes = len(self.nodes)
+        visited = {}
+        pred = {} #predecessors
+        dist = {} #distance
 
-        visited = [False] * nr_of_nodes
-        pred = [0] * nr_of_nodes
-        dist = [0] * nr_of_nodes
-
-        for i in range(nr_of_nodes):
-            dist[i] = sys.maxsize
-            pred[i] = -1
+        for node in self.nodes:
+            dist[node] = sys.maxsize
+            pred[node] = -1
+            visited[node] = False
 
         visited[src] = True
         dist[src] = 0
-
-        q = []
-        q.append(src)
+        q = [src]
 
         while len(q) != 0:
             u = q.pop(0)
-            for i in range(len(self.edges[u])):
-                if visited[self.edges[u][i]] == False:
-                    visited[self.edges[u][i]] = True
-                    dist[self.edges[u][i]] = dist[u] + 1
-                    pred[self.edges[u][i]] = u
-                    q.append(self.edges[u][i])
+            for v in self.edges[u]:
+                if visited[v] == False:
+                    visited[v] = True
+                    dist[v] = dist[u] + 1
+                    pred[v] = u
+                    q.append(v)
 
         return dist, pred
 
