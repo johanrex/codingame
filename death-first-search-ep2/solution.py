@@ -39,13 +39,10 @@ class Solution:
 
                 for node in path:
                     if node != agent_id and node in other_path:
-                        print("in path", path)
-                        print("and other path", other_path)
-                        print("found common node", node)
-
                         path_infos[i][0] -=1
                         path_infos[j][0] -=1
 
+        #sort on the cost that we store in first pos in list. 
         path_infos.sort()
 
         path_to_exit_gateway_with_shortest_path = path_infos[0][1]

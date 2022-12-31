@@ -3,31 +3,20 @@ import glob
 import os
 import re
 
-
 pat1 = re.compile(r"import (.*)", re.MULTILINE)
 pat2 = re.compile(r"from (.*) import ", re.MULTILINE)
 
+parser = argparse.ArgumentParser(prog="Make one file", description="Makes one file from many python files", epilog="...")
+parser.add_argument("files", nargs="+", help="List of files. Separated by space.")
+args = parser.parse_args()
 
-# parser = argparse.ArgumentParser(prog="Make one file", description="Makes one file from many python files", epilog="...")
-# parser.add_argument("-i", "--ignore")
-# parser.add_argument("folder")
-# args = parser.parse_args()
+files = args.files
 
-# # read all python files in folder.
-# paths = glob.glob(args.folder + "/*.py")
-
-paths = [
-    "death-first-search-ep2\\log.py",
-    "death-first-search-ep2\\graph.py",
-    "death-first-search-ep2\\solution.py",
-    "death-first-search-ep2\\main.py",
-]
-
-module_names = [os.path.splitext(os.path.basename(path))[0] for path in paths]
+module_names = [os.path.splitext(os.path.basename(file))[0] for file in files]
 
 big = ""
-for path in paths:
-    with open(path, "r") as f:
+for file in files:
+    with open(file, "r") as f:
         for line in f:
             if (m := re.search(pat2, line)) is not None:
                 if m.group(1) in module_names:
@@ -43,3 +32,5 @@ for path in paths:
 output_filename = "big.py"
 with open(output_filename, "w") as f:
     f.write(big)
+
+print("Done. Wrote to", output_filename)
