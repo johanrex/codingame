@@ -50,8 +50,9 @@ class Graph:
 
         return dist, pred
 
-    def get_path(self, dest, pred) -> list[object]:
-        # vector path stores the shortest path
+class GraphUtils:
+    @staticmethod
+    def get_path(dest, pred) -> list[object]:
         path = []
         crawl = dest
         path.append(crawl)

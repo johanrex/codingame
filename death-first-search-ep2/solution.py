@@ -1,4 +1,4 @@
-from graph import Graph
+from graph import Graph, GraphUtils
 from log import log
 
 
@@ -21,21 +21,36 @@ class Solution:
     def add_exit_gateway(self, e):
         self.exit_gateways.append(e)
 
-    def cut(self, agent_idx):
-        dist, pred = self.g.bfs(agent_idx)
+    def link_to_cut(self, agent_id):
+        dist, pred = self.g.bfs(agent_id)
 
-        paths = []
+        path_infos = []
         for eg in self.exit_gateways:
-            d = dist[eg]
-            path = self.g.get_path(eg, pred)
-            paths.append((d, path))
+            cost = dist[eg]
+            path = GraphUtils.get_path(eg, pred)
+            path_infos.append([cost, path])
 
-        paths.sort()
+        #for each common node, decrease the cost of the path by 1
+        #we can't trust the cost of the path anymore, but relative cost is still valid
+        for i in range(len(path_infos)):
+            _, path = path_infos[i]
+            for j in range(i+1, len(path_infos)):
+                _, other_path = path_infos[j]
 
-        path_to_exit_gateway_with_shortest_path = paths[0][1]
+                for node in path:
+                    if node != agent_id and node in other_path:
+                        print("in path", path)
+                        print("and other path", other_path)
+                        print("found common node", node)
+
+                        path_infos[i][0] -=1
+                        path_infos[j][0] -=1
+
+        path_infos.sort()
+
+        path_to_exit_gateway_with_shortest_path = path_infos[0][1]
         u = path_to_exit_gateway_with_shortest_path[0]
         v = path_to_exit_gateway_with_shortest_path[1]
-        self.g.remove_edge(u, v)
 
         # TODO, if no links to exit gateway anymore, remove it from graph.
 

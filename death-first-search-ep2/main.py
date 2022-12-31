@@ -12,16 +12,16 @@ def main():
     # e: the number of exit gateways
     n, l, e = [int(i) for i in logged_input().split()]
 
-    solution = Solution(n)
+    s = Solution(n)
 
     for _ in range(l):
         # n1, n2 defines a link between these nodes
         n1, n2 = [int(j) for j in logged_input().split()]
-        solution.add_link(n1, n2)
+        s.add_link(n1, n2)
 
     for _ in range(e):
         ei = int(logged_input())  # the index of a gateway node
-        solution.add_exit_gateway(ei)
+        s.add_exit_gateway(ei)
 
     # game loop
     while True:
@@ -30,11 +30,10 @@ def main():
         except EOFError:
             break
 
-        u, v = solution.cut(si)
-
-        # Example: 0 1 are the indices of the nodes you wish to sever the link between
+        u, v = s.link_to_cut(si)
+        s.remove_link(u,v)
+        
         print(u, v, flush=True)
-
 
 if __name__ == "__main__":
     main()
