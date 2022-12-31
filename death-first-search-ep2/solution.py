@@ -22,10 +22,6 @@ class Solution:
         self.exit_gateways.append(e)
 
     def cut(self, agent_idx):
-
-        # shortest_path = self.g.get_shortest_path(agent_idx, self.exit_gateways)
-        # u, v = shortest_path[-1], shortest_path[-2]
-
         dist, pred = self.g.bfs(agent_idx)
 
         paths = []
@@ -44,6 +40,3 @@ class Solution:
         # TODO, if no links to exit gateway anymore, remove it from graph.
 
         return u, v
-
-    # def bfs(self, s):
-    #     self.g.bfs(s)
