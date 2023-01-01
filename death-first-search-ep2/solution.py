@@ -1,7 +1,6 @@
 from collections import Counter
 import itertools
 from graph import Graph, GraphUtils
-from log import log
 
 
 class Solution:
