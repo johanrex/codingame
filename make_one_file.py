@@ -28,9 +28,11 @@ for file in files:
 
             big += line
 
-
+output_folder = "dist"
 output_filename = "big.py"
-with open(output_filename, "w") as f:
+os.makedirs(output_folder, exist_ok=True)
+output_path = os.path.join(output_folder, output_filename)
+with open(output_path, "w") as f:
     f.write(big)
 
-print("Done. Wrote to", output_filename)
+print("Done. Wrote to", output_path)

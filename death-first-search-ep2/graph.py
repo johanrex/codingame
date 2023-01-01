@@ -14,6 +14,13 @@ class Graph:
         self.nodes.append(node)
         self.edges[node] = []
 
+    def remove_node(self, node):
+        assert isinstance(node, typing.Hashable)
+        assert node in self.nodes
+
+        del self.edges[node]
+        self.nodes.remove(node)
+
     def add_edge(self, u, v):
         assert v not in self.edges[u]
         assert u not in self.edges[v]
