@@ -7,6 +7,7 @@ class BotIO:
         self.input_ = input_
 
     def log(self, *objects):
+        #debug-logging in codingame is defined like this. 
         print(*objects, file=sys.stderr, flush=True)
 
     def logged_input(self):
@@ -15,5 +16,5 @@ class BotIO:
         return s
 
     def logged_output(self, *objects):
-        self.log("OUTPUT:", objects)
+        self.log("OUTPUT:", *objects)
         self.print_(*objects)

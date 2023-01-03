@@ -37,12 +37,16 @@ class MockIO:
         assert line == " ".join([str(arg) for arg in args])
         print(*args, **kwargs)
 
-def test_main_1():
+def test_main_robust_double_gateways():
     mock_io = MockIO("tests/input_robust_double_gateways.txt", "tests/output_robust_double_gateways.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
     
+
+def test_main_ordered_gateways():
     mock_io = MockIO("tests/input_ordered_gateways.txt", "tests/output_ordered_gateways.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
 
 if __name__ == "__main__":
-    test_main_1()
+    test_main_robust_double_gateways()
+    test_main_ordered_gateways()
+    

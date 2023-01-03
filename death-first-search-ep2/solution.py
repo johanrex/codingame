@@ -49,22 +49,34 @@ class Solution:
             #only keep nodes that have a connection to more than one exit node
             node_to_exit_gateway_count_lookup = {k:v for k, v in node_to_exit_gateway_count_lookup.items() if v>1}
 
+            #do we only have one exit node left?
             if len(node_to_exit_gateway_count_lookup) == 0:
                 #just pick a link going to an exit gateway.
                 eg = self.exit_gateways[0]
                 u = g.edges[eg][0]
                 v = eg
             else:
-                urgency_lookup = {}
-                for node, exit_gateway_count in node_to_exit_gateway_count_lookup.items():
-                    urgency_lookup[node] = exit_gateway_count - dist[node]
+                non_exit_node_edge_count_lookup = {}
+
+                for node in node_to_exit_gateway_count_lookup.keys():
+                    non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
+
+                most_urgent_node = sorted(non_exit_node_edge_count_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
+
+                #TODO, a node leading to more than one exit node is more urgent if it has greater number of non-exit node edges. 
+                #TODO...
+
+                #urgency_lookup = {}
+
+                # for node, exit_gateway_count in node_to_exit_gateway_count_lookup.items():
+                #     urgency_lookup[node] = exit_gateway_count - dist[node]
 
                 #sort urgency_lookup on urgency
-                sorted_urgency_lookup = sorted(urgency_lookup.items(), key=lambda item: item[1], reverse=True)
+                # sorted_urgency_lookup = sorted(urgency_lookup.items(), key=lambda item: item[1], reverse=True)
 
-                most_urgent_node = sorted_urgency_lookup[0][0]
-                potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
+                #most_urgent_node = sorted_urgency_lookup[0][0]
                 
+                potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
                 eg = next(iter(potential_exit_gateways))
 
                 u = most_urgent_node
