@@ -11,11 +11,19 @@
             "program": "main.py",
             "args": [
                 "<",
-                "tests/input_complex_mesh.txt"
+                "tests/input_ordered_gateways.txt"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
         },
+        {
+            "name": "Python: tests",
+            "type": "python",
+            "request": "launch",
+            "program": "tests/test_main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },        
         {
             "name": "Python: Current File",
             "type": "python",

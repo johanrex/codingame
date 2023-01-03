@@ -56,31 +56,29 @@ class Solution:
                 u = g.edges[eg][0]
                 v = eg
             else:
-                non_exit_node_edge_count_lookup = {}
+                most_urgent_node = next((node for node in node_to_exit_gateway_count_lookup.keys() if dist[node] == 1), None)
+                if most_urgent_node is not None:
+                    potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
+                    eg = next(iter(potential_exit_gateways))
 
-                for node in node_to_exit_gateway_count_lookup.keys():
-                    non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
+                    u = most_urgent_node
+                    v = eg
+                else:
+                    non_exit_node_edge_count_lookup = {}
 
-                most_urgent_node = sorted(non_exit_node_edge_count_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
+                    for node in node_to_exit_gateway_count_lookup.keys():
+                        non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
 
-                #TODO, a node leading to more than one exit node is more urgent if it has greater number of non-exit node edges. 
-                #TODO...
+                    urgency_lookup = {}
+                    for node in node_to_exit_gateway_count_lookup.keys():
+                        urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist[node]
 
-                #urgency_lookup = {}
+                    most_urgent_node = sorted(urgency_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
+                    potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
+                    eg = next(iter(potential_exit_gateways))
 
-                # for node, exit_gateway_count in node_to_exit_gateway_count_lookup.items():
-                #     urgency_lookup[node] = exit_gateway_count - dist[node]
-
-                #sort urgency_lookup on urgency
-                # sorted_urgency_lookup = sorted(urgency_lookup.items(), key=lambda item: item[1], reverse=True)
-
-                #most_urgent_node = sorted_urgency_lookup[0][0]
-                
-                potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
-                eg = next(iter(potential_exit_gateways))
-
-                u = most_urgent_node
-                v = eg
+                    u = most_urgent_node
+                    v = eg
 
         #paths.sort(key=lambda path: len(path))
 
