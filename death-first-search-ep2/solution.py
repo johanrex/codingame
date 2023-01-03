@@ -1,4 +1,5 @@
 from collections import Counter
+from dataclasses import dataclass
 import itertools
 from graph import Graph, GraphUtils
 
@@ -33,11 +34,6 @@ class Solution:
     def link_to_cut(self, agent_id):
         g = self.g
         dist, pred = g.bfs(agent_id)
-
-        # paths = []
-        # for eg in self.exit_gateways:
-        #     path = GraphUtils.get_path(eg, pred)
-        #     paths.append(path)
         
         #is agent next to exit node?
         if (eg := next((eg for eg in self.exit_gateways if dist[eg] == 1), None)) is not None:
@@ -45,20 +41,37 @@ class Solution:
             v = eg
         else:
             #find nodes connected to more than one exit node, pick the most urgent one to cut.
-            nodes_adjacent_exits = []
+            node_to_exit_gateway_count_lookup = {}
+
             for eg in self.exit_gateways:
-                nodes_adjacent_exits.extend(g.edges[eg])
+                for node in g.edges[eg]:
+                    if node not in node_to_exit_gateway_count_lookup:
+                        node_to_exit_gateway_count_lookup[node] = 0
+                    node_to_exit_gateway_count_lookup[node] += 1
 
-            c = Counter(nodes_adjacent_exits)
-            #c_sorted = sorted(c, key=lambda x:c[x], reverse=True) #most common node first
+            #only keep nodes that have a connection to more than one exit node
+            node_to_exit_gateway_count_lookup = {k:v for k, v in node_to_exit_gateway_count_lookup.items() if v>1}
 
-            # calc urgency.
-            node = c.most_common(1)[0][0]
-            ns = g.edges[node]
+            if len(node_to_exit_gateway_count_lookup) == 0:
+                #just pick a link going to an exit gateway.
+                eg = self.exit_gateways[0]
+                u = g.edges[eg][0]
+                v = eg
+            else:
+                urgency_lookup = {}
+                for node, exit_gateway_count in node_to_exit_gateway_count_lookup.items():
+                    urgency_lookup[node] = exit_gateway_count - dist[node]
 
-            eg = next(n for n in ns if n in self.exit_gateways)
-            u = eg
-            v = node
+                #sort urgency_lookup on urgency
+                sorted_urgency_lookup = sorted(urgency_lookup.items(), key=lambda item: item[1], reverse=True)
+
+                most_urgent_node = sorted_urgency_lookup[0][0]
+                potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
+                
+                eg = next(iter(potential_exit_gateways))
+
+                u = most_urgent_node
+                v = eg
 
         #paths.sort(key=lambda path: len(path))
 
