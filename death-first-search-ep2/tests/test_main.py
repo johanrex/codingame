@@ -41,6 +41,8 @@ def test_main_1():
     mock_io = MockIO("tests/input_robust_double_gateways.txt", "tests/output_robust_double_gateways.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
     
+    mock_io = MockIO("tests/input_ordered_gateways.txt", "tests/output_ordered_gateways.txt")
+    main.main(mock_io.mock_input, mock_io.mock_print)
 
 if __name__ == "__main__":
     test_main_1()
