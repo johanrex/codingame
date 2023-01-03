@@ -31,37 +31,37 @@ class Solution:
         self.exit_gateways.append(e)
 
     def link_to_cut(self, agent_id):
-        dist, pred = self.g.bfs(agent_id)
+        g = self.g
+        dist, pred = g.bfs(agent_id)
 
-        paths = []
-        for eg in self.exit_gateways:
-            path = GraphUtils.get_path(eg, pred)
-            paths.append(path)
+        # paths = []
+        # for eg in self.exit_gateways:
+        #     path = GraphUtils.get_path(eg, pred)
+        #     paths.append(path)
+        
+        #is agent next to exit node?
+        if (eg := next((eg for eg in self.exit_gateways if dist[eg] == 1), None)) is not None:
+            u = agent_id
+            v = eg
+        else:
+            #find nodes connected to more than one exit node, pick the most urgent one to cut.
+            nodes_adjacent_exits = []
+            for eg in self.exit_gateways:
+                nodes_adjacent_exits.extend(g.edges[eg])
 
-        paths.sort(key=lambda path: len(path))
+            c = Counter(nodes_adjacent_exits)
+            #c_sorted = sorted(c, key=lambda x:c[x], reverse=True) #most common node first
 
-        shortest_path = len(paths[0])
-        shortest_paths = [path for path in paths if len(path) == shortest_path]
+            # calc urgency.
+            node = c.most_common(1)[0][0]
+            ns = g.edges[node]
 
-        #is there only one shortest path? 
-        if len(shortest_paths) == 1: 
-            path = shortest_paths[0]
-        else: 
-            #no, we have more than one path with shortest length
-            #choose the one with most common nodes
-            nodes = itertools.chain(*shortest_paths)
-            c = Counter(nodes)
-            del c[agent_id]
-            #get most common node
-            most_common_node = c.most_common(1)[0][0]
+            eg = next(n for n in ns if n in self.exit_gateways)
+            u = eg
+            v = node
 
-            #choose paths containing the most common node
-            shortest_paths_containing_most_common_node = [path for path in shortest_paths if most_common_node in path]
-            
-            #pick one random, they should be equivalent. 
-            path = shortest_paths_containing_most_common_node[0]
+        #paths.sort(key=lambda path: len(path))
 
-        u = path[0]
-        v = path[1]
-
+        assert u is not None
+        assert v is not None
         return u, v

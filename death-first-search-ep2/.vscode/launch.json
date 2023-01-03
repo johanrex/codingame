@@ -11,7 +11,7 @@
             "program": "main.py",
             "args": [
                 "<",
-                "input_robust_double_gateways.txt"
+                "tests/input_leading_up_to_double_gateway_input.txt"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
