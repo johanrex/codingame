@@ -30,12 +30,11 @@ class Solution:
 
     def link_to_cut(self, agent_id):
         g = self.g
-        dist, pred = g.bfs(agent_id)
         
-        #is agent next to exit node?
-        if (eg := next((eg for eg in self.exit_gateways if dist[eg] == 1), None)) is not None:
+        #is next to exit gateway?
+        if len(egs := set(g.edges[agent_id]) & set(self.exit_gateways)) > 0:
             u = agent_id
-            v = eg
+            v = next(iter(egs))
         else:
             #find nodes connected to more than one exit node, pick the most urgent one to cut.
             node_to_exit_gateway_count_lookup = {}
@@ -56,6 +55,8 @@ class Solution:
                 u = g.edges[eg][0]
                 v = eg
             else:
+                dist, pred = g.bfs(agent_id)
+
                 most_urgent_node = next((node for node in node_to_exit_gateway_count_lookup.keys() if dist[node] == 1), None)
                 if most_urgent_node is not None:
                     potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)

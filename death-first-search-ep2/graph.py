@@ -1,10 +1,17 @@
 import sys
 import typing
+import copy
 
 class Graph:
     def __init__(self) -> None:
         self.nodes: list = []
         self.edges: dict[object, list] = {}
+
+    def copy(self):
+        new_graph = Graph()
+        new_graph.nodes = copy.deepcopy(self.nodes)
+        new_graph.edges = copy.deepcopy(self.edges)
+        return new_graph
 
     def add_node(self, node):
         assert isinstance(node, typing.Hashable)
