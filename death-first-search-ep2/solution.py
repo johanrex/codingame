@@ -78,16 +78,16 @@ class Solution:
                     
                     dist_no_egs, pred_no_egs = g_no_egs.bfs(agent_id)
 
-
                     non_exit_node_edge_count_lookup = {}
-
                     for node in nodes_connected_to_multiple_exit_gateways.keys():
                         non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
 
+
+                    #TODO increase urgency by considering how many nodes along the way that are connected to exit nodes. They are forcing moves.
                     urgency_lookup = {}
                     for node in nodes_connected_to_multiple_exit_gateways.keys():
-                        #urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist_no_egs[node]
-                        urgency_lookup[node] = dist_no_egs[node]
+                        #assume distance is never more than 100
+                        urgency_lookup[node] = (non_exit_node_edge_count_lookup[node]*1000) + 100 - dist_no_egs[node]
 
                     most_urgent_node = sorted(urgency_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
                     potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
@@ -95,8 +95,6 @@ class Solution:
 
                     u = most_urgent_node
                     v = eg
-
-        #paths.sort(key=lambda path: len(path))
 
         assert u is not None
         assert v is not None
