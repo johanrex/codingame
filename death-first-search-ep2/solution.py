@@ -84,6 +84,7 @@ class Solution:
 
 
                     #TODO increase urgency by considering how many nodes along the way that are connected to exit nodes. They are forcing moves.
+                    #TODO no point in using the dist from dist_no_egs since it can contain forcing moves. 
                     urgency_lookup = {}
                     for node in nodes_connected_to_multiple_exit_gateways.keys():
                         #assume distance is never more than 100
