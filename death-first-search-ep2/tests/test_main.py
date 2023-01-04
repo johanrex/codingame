@@ -57,7 +57,7 @@ def test_main_05_complex_mesh():
 
 
 if __name__ == "__main__":
-    test_main_01_robust_double_gateways
+    test_main_01_robust_double_gateways()
     test_main_02_linked_double_gateways()
     test_main_04_ordered_gateways()
     test_main_05_complex_mesh()
