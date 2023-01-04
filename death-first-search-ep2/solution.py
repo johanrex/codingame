@@ -31,7 +31,9 @@ class Solution:
     def link_to_cut(self, agent_id):
         g = self.g
         
-        #is next to exit gateway?
+        ##########################
+        # is next to exit gateway?
+        ##########################
         if len(egs := set(g.edges[agent_id]) & set(self.exit_gateways)) > 0:
             u = agent_id
             v = next(iter(egs))
@@ -46,22 +48,23 @@ class Solution:
                     node_to_exit_gateway_count_lookup[node] += 1
 
             #only keep nodes that have a connection to more than one exit node
-            node_to_exit_gateway_count_lookup = {k:v for k, v in node_to_exit_gateway_count_lookup.items() if v>1}
-
-            #do we only have one exit node left?
-            if len(node_to_exit_gateway_count_lookup) == 0:
+            nodes_connected_to_multiple_exit_gateways = {k:v for k, v in node_to_exit_gateway_count_lookup.items() if v>1}
+            
+            ###############################
+            # only have one exit node left?
+            ###############################
+            if len(nodes_connected_to_multiple_exit_gateways) == 0:
                 #just pick a link going to an exit gateway.
                 eg = self.exit_gateways[0]
                 u = g.edges[eg][0]
                 v = eg
             else:
-                ###############################
-                #TODO fortsätt tänka här...
-                ###############################
-
                 dist, pred = g.bfs(agent_id)
 
-                most_urgent_node = next((node for node in node_to_exit_gateway_count_lookup.keys() if dist[node] == 1), None)
+                ###################################
+                # is node one step away from agent?
+                ###################################
+                most_urgent_node = next((node for node in nodes_connected_to_multiple_exit_gateways.keys() if dist[node] == 1), None)
                 if most_urgent_node is not None:
                     potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
                     eg = next(iter(potential_exit_gateways))
@@ -78,12 +81,13 @@ class Solution:
 
                     non_exit_node_edge_count_lookup = {}
 
-                    for node in node_to_exit_gateway_count_lookup.keys():
+                    for node in nodes_connected_to_multiple_exit_gateways.keys():
                         non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
 
                     urgency_lookup = {}
-                    for node in node_to_exit_gateway_count_lookup.keys():
-                        urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist_no_egs[node]
+                    for node in nodes_connected_to_multiple_exit_gateways.keys():
+                        #urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist_no_egs[node]
+                        urgency_lookup[node] = dist_no_egs[node]
 
                     most_urgent_node = sorted(urgency_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
                     potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)

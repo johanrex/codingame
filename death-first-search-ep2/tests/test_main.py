@@ -37,23 +37,27 @@ class MockIO:
         assert line == " ".join([str(arg) for arg in args])
         print(*args, **kwargs)
 
-def test_main_robust_double_gateways():
+def test_main_01_robust_double_gateways():
     mock_io = MockIO("tests/test_files/01_robust_double_gateways_input.txt", "tests/test_files/01_robust_double_gateways_output.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
     
 
-def test_main_ordered_gateways():
+def test_main_04_ordered_gateways():
     mock_io = MockIO("tests/test_files/04_ordered_gateways_input.txt", "tests/test_files/04_ordered_gateways_output.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
 
 
-def test_main_02_linked_double_gateways_input():
+def test_main_02_linked_double_gateways():
     mock_io = MockIO("tests/test_files/02_linked_double_gateways_input.txt", "tests/test_files/02_linked_double_gateways_output.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
 
+def test_main_05_complex_mesh():
+    mock_io = MockIO("tests/test_files/05_complex_mesh_input.txt", "tests/test_files/05_complex_mesh_output.txt")
+    main.main(mock_io.mock_input, mock_io.mock_print)
 
 
 if __name__ == "__main__":
-    test_main_robust_double_gateways()
-    test_main_ordered_gateways()
-    
+    test_main_01_robust_double_gateways
+    test_main_02_linked_double_gateways()
+    test_main_04_ordered_gateways()
+    test_main_05_complex_mesh()

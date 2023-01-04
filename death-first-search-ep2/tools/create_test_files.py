@@ -88,18 +88,18 @@ INPUT: 16
 INPUT: 18
 INPUT: 26
 INPUT: 2
-OUTPUT: 17 16
+OUTPUT: 27 16
 
 Standard Output Stream:
 
-17 16
+27 16
 
 Game information:
 
-Link [17-16] severed
+Link [27-16] severed
 Agent moved from 2 to 1
 
-1 7
+01 20
 Standard Error Stream:
 
 INPUT: 1
@@ -114,7 +114,7 @@ Game information:
 Link [1-0] severed
 Agent moved from 1 to 7
 
-2 7
+02 20
 Standard Error Stream:
 
 INPUT: 7
@@ -129,7 +129,7 @@ Game information:
 Link [7-0] severed
 Agent moved from 7 to 13
 
-3 7
+03 20
 Standard Error Stream:
 
 INPUT: 13
@@ -144,7 +144,7 @@ Game information:
 Link [13-16] severed
 Agent moved from 13 to 15
 
-4 7
+04 20
 Standard Error Stream:
 
 INPUT: 15
@@ -159,7 +159,7 @@ Game information:
 Link [15-16] severed
 Agent moved from 15 to 23
 
-5 7
+05 20
 Standard Error Stream:
 
 INPUT: 23
@@ -174,11 +174,210 @@ Game information:
 Link [23-16] severed
 Agent moved from 23 to 27
 
-6 7
+06 20
 Standard Error Stream:
 
 INPUT: 27
-OUTPUT: 27 16
+OUTPUT: 27 26
+
+Standard Output Stream:
+
+27 26
+
+Game information:
+
+Link [27-26] severed
+Agent moved from 27 to 30
+
+07 20
+Standard Error Stream:
+
+INPUT: 30
+OUTPUT: 30 16
+
+Standard Output Stream:
+
+30 16
+
+Game information:
+
+Link [30-16] severed
+Agent moved from 30 to 27
+
+08 20
+Standard Error Stream:
+
+INPUT: 27
+OUTPUT: 17 16
+
+Standard Output Stream:
+
+17 16
+
+Game information:
+
+Link [17-16] severed
+Agent moved from 27 to 25
+
+09 20
+Standard Error Stream:
+
+INPUT: 25
+OUTPUT: 25 26
+
+Standard Output Stream:
+
+25 26
+
+Game information:
+
+Link [25-26] severed
+Agent moved from 25 to 27
+
+10 20
+Standard Error Stream:
+
+INPUT: 27
+OUTPUT: 10 0
+
+Standard Output Stream:
+
+10 0
+
+Game information:
+
+Link [10-0] severed
+Agent moved from 27 to 28
+
+11 20
+Standard Error Stream:
+
+INPUT: 28
+OUTPUT: 28 26
+
+Standard Output Stream:
+
+28 26
+
+Game information:
+
+Link [28-26] severed
+Agent moved from 28 to 27
+
+12 20
+Standard Error Stream:
+
+INPUT: 27
+OUTPUT: 6 0
+
+Standard Output Stream:
+
+6 0
+
+Game information:
+
+Link [6-0] severed
+Agent moved from 27 to 23
+
+13 20
+Standard Error Stream:
+
+INPUT: 23
+OUTPUT: 9 0
+
+Standard Output Stream:
+
+9 0
+
+Game information:
+
+Link [9-0] severed
+Agent moved from 23 to 15
+
+14 20
+Standard Error Stream:
+
+INPUT: 15
+OUTPUT: 11 0
+
+Standard Output Stream:
+
+11 0
+
+Game information:
+
+Link [11-0] severed
+Agent moved from 15 to 13
+
+15 20
+Standard Error Stream:
+
+INPUT: 13
+OUTPUT: 8 16
+
+Standard Output Stream:
+
+8 16
+
+Game information:
+
+Link [8-16] severed
+Agent moved from 13 to 36
+
+16 20
+Standard Error Stream:
+
+INPUT: 36
+OUTPUT: 17 18
+
+Standard Output Stream:
+
+17 18
+
+Game information:
+
+Link [17-18] severed
+Agent moved from 36 to 8
+
+17 20
+Standard Error Stream:
+
+INPUT: 8
+OUTPUT: 32 18
+
+Standard Output Stream:
+
+32 18
+
+Game information:
+
+Link [32-18] severed
+Agent moved from 8 to 19
+
+18 20
+Standard Error Stream:
+
+INPUT: 19
+OUTPUT: 19 18
+
+Standard Output Stream:
+
+19 18
+
+Game information:
+
+Link [19-18] severed
+Agent moved from 19 to 22
+
+19 20
+Standard Error Stream:
+
+INPUT: 22
+OUTPUT: 22 18
+
+Standard Output Stream:
+
+22 18
 """
 
 def extract(content, prefix):
