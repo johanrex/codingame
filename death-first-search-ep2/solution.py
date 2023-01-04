@@ -55,6 +55,10 @@ class Solution:
                 u = g.edges[eg][0]
                 v = eg
             else:
+                ###############################
+                #TODO fortsätt tänka här...
+                ###############################
+
                 dist, pred = g.bfs(agent_id)
 
                 most_urgent_node = next((node for node in node_to_exit_gateway_count_lookup.keys() if dist[node] == 1), None)
@@ -65,6 +69,13 @@ class Solution:
                     u = most_urgent_node
                     v = eg
                 else:
+                    g_no_egs = g.copy()
+                    for eg in self.exit_gateways:
+                        g_no_egs.remove_node(eg)
+                    
+                    dist_no_egs, pred_no_egs = g_no_egs.bfs(agent_id)
+
+
                     non_exit_node_edge_count_lookup = {}
 
                     for node in node_to_exit_gateway_count_lookup.keys():
@@ -72,7 +83,7 @@ class Solution:
 
                     urgency_lookup = {}
                     for node in node_to_exit_gateway_count_lookup.keys():
-                        urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist[node]
+                        urgency_lookup[node] = non_exit_node_edge_count_lookup[node] - dist_no_egs[node]
 
                     most_urgent_node = sorted(urgency_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
                     potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)

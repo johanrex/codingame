@@ -24,8 +24,15 @@ class Graph:
         assert isinstance(node, typing.Hashable)
         assert node in self.nodes
 
+        #remove from neighbors
+        for e in self.edges[node]:
+            self.edges[e].remove(node)
+
         del self.edges[node]
         self.nodes.remove(node)
+
+        #TODO it's possible that this leaves an orphaned node if the node we removed was the only link to it. 
+
 
     def add_edge(self, u, v):
         assert v not in self.edges[u]

@@ -38,13 +38,20 @@ class MockIO:
         print(*args, **kwargs)
 
 def test_main_robust_double_gateways():
-    mock_io = MockIO("tests/input_robust_double_gateways.txt", "tests/output_robust_double_gateways.txt")
+    mock_io = MockIO("tests/test_files/robust_double_gateways_input.txt", "tests/test_files/robust_double_gateways_output.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
     
 
 def test_main_ordered_gateways():
-    mock_io = MockIO("tests/input_ordered_gateways.txt", "tests/output_ordered_gateways.txt")
+    mock_io = MockIO("tests/test_files/ordered_gateways_input.txt", "tests/test_files/ordered_gateways_output.txt")
     main.main(mock_io.mock_input, mock_io.mock_print)
+
+
+def test_main_02_linked_double_gateways_input():
+    mock_io = MockIO("tests/test_files/02_linked_double_gateways_input.txt", "tests/test_files/02_linked_double_gateways_output.txt")
+    main.main(mock_io.mock_input, mock_io.mock_print)
+
+
 
 if __name__ == "__main__":
     test_main_robust_double_gateways()
