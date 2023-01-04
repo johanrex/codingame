@@ -11,7 +11,7 @@
             "program": "main.py",
             "args": [
                 "<",
-                "tests/test_files/linked_double_gateway.txt"
+                "tests/test_files/05_complex_mesh_input.txt"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
