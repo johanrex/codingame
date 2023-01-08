@@ -1,5 +1,5 @@
 from typing import Callable
-from graph import Graph, GraphUtils
+from graph import Graph
 import sys
 
 class Solution:
@@ -28,38 +28,6 @@ class Solution:
 
     def add_exit_gateway(self, e):
         self.exit_gateways.append(e)
-
-    def __special_bfs(self, src, g: Graph):
-        visited = {}
-        pred = {} #predecessors
-        dist = {} #distance
-
-        for node in g.nodes:
-            dist[node] = sys.maxsize
-            pred[node] = -1
-            visited[node] = False
-
-        visited[src] = True
-        dist[src] = 0
-        q = [src]
-
-        while len(q) != 0:
-            u = q.pop(0)
-            for v in g.edges[u]:
-                if visited[v] == False:
-                    visited[v] = True
-
-                    #if v is connected to exit node then no dist increment. 
-                    if len(set(g.edges[v]) & set(self.exit_gateways)) > 0:
-                        d = 0
-                    else:
-                        d = 1
-
-                    dist[v] = dist[u] + d
-                    pred[v] = u
-                    q.append(v)
-
-        return dist, pred
 
 
     def edge_cost(self, src, dst):
@@ -164,12 +132,6 @@ class Solution:
                 nodes_connected_to_multiple_exit_gateways = nodes_connected_to_multiple_exit_gateways.keys()
 
                 nodes_connected_to_multiple_exit_gateways_dist_lookup = {n : dist[n] for n in nodes_connected_to_multiple_exit_gateways}
-                #TODO verifiera denna för den verkar inte rätt för complex mesh mapen.... nodes_connected_to_multiple_exit_gateways_dist_lookup
-                # dist till 27 skall bara bara 1. 
-                # bfs går via exit noderna och det är fel.. 
-
-                #nodes_connected_to_multiple_exit_gateways_connected_count_lookup = {n : len(g.edges[n]) for n in nodes_connected_to_multiple_exit_gateways}
-
 
                 most_urgent_node = sorted(nodes_connected_to_multiple_exit_gateways_dist_lookup.items(), key=lambda item:item[1])[0][0]
 
