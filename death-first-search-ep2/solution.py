@@ -1,5 +1,6 @@
+from typing import Callable
 from graph import Graph, GraphUtils
-
+import sys
 
 class Solution:
     def __init__(self, n) -> None:
@@ -27,6 +28,97 @@ class Solution:
 
     def add_exit_gateway(self, e):
         self.exit_gateways.append(e)
+
+    def __special_bfs(self, src, g: Graph):
+        visited = {}
+        pred = {} #predecessors
+        dist = {} #distance
+
+        for node in g.nodes:
+            dist[node] = sys.maxsize
+            pred[node] = -1
+            visited[node] = False
+
+        visited[src] = True
+        dist[src] = 0
+        q = [src]
+
+        while len(q) != 0:
+            u = q.pop(0)
+            for v in g.edges[u]:
+                if visited[v] == False:
+                    visited[v] = True
+
+                    #if v is connected to exit node then no dist increment. 
+                    if len(set(g.edges[v]) & set(self.exit_gateways)) > 0:
+                        d = 0
+                    else:
+                        d = 1
+
+                    dist[v] = dist[u] + d
+                    pred[v] = u
+                    q.append(v)
+
+        return dist, pred
+
+
+    def edge_cost(self, src, dst):
+        assert src not in self.exit_gateways
+        assert dst not in self.exit_gateways
+
+        assert src in self.g.edges[dst]
+        assert dst in self.g.edges[src]
+
+        #if both are connected to exit node then cost is 0.
+        if len(set(self.g.edges[src]) & set(self.exit_gateways)) > 0 and len(set(self.g.edges[dst]) & set(self.exit_gateways)) > 0:
+            cost = 0
+        else:
+            cost = 1
+
+        return cost    
+
+    def dijkstras(self, g:Graph, start_node:object, edge_cost_func:Callable[[object, object], int]):
+        unvisited_nodes = list(g.nodes)
+    
+        # We'll use this dict to save the cost of visiting each node and update it as we move along the graph   
+        dist = {}
+    
+        # We'll use this dict to save the shortest known path to a node found so far
+        prev = {}
+    
+        # We'll use max_value to initialize the "infinity" value of the unvisited nodes   
+        max_value = sys.maxsize
+        for node in unvisited_nodes:
+            dist[node] = max_value
+        # However, we initialize the starting node's value with 0   
+        dist[start_node] = 0
+        
+        # The algorithm executes until we visit all nodes
+        while unvisited_nodes:
+            # The code block below finds the node with the lowest score
+            current_min_node = None
+            for node in unvisited_nodes: # Iterate over the nodes
+                if current_min_node == None:
+                    current_min_node = node
+                elif dist[node] < dist[current_min_node]:
+                    current_min_node = node
+                    
+            # The code block below retrieves the current node's neighbors and updates their distances
+            neighbors = g.edges[current_min_node]
+            for neighbor in neighbors:
+                
+                tentative_value = dist[current_min_node] + edge_cost_func(current_min_node, neighbor)
+                #tentative_value = dist[current_min_node] + g.value(current_min_node, neighbor)
+                if tentative_value < dist[neighbor]:
+                    dist[neighbor] = tentative_value
+                    # We also update the best path to the current node
+                    prev[neighbor] = current_min_node
+    
+            # After visiting its neighbors, we mark the node as "visited"
+            unvisited_nodes.remove(current_min_node)
+        
+        return prev, dist
+
 
     def link_to_cut(self, agent_id):
         g = self.g
@@ -59,43 +151,35 @@ class Solution:
                 u = g.edges[eg][0]
                 v = eg
             else:
-                dist, pred = g.bfs(agent_id)
+                #TODO increase urgency by considering how many nodes along the way that are connected to exit nodes. They are forcing moves.
+                #TODO no point in using the dist from dist_no_egs since it can contain forcing moves. 
 
-                ###################################
-                # is node one step away from agent?
-                ###################################
-                most_urgent_node = next((node for node in nodes_connected_to_multiple_exit_gateways.keys() if dist[node] == 1), None)
-                if most_urgent_node is not None:
-                    potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
-                    eg = next(iter(potential_exit_gateways))
+                g_no_egs = g.copy()
+                for eg in self.exit_gateways:
+                    g_no_egs.remove_node(eg)
 
-                    u = most_urgent_node
-                    v = eg
-                else:
-                    g_no_egs = g.copy()
-                    for eg in self.exit_gateways:
-                        g_no_egs.remove_node(eg)
-                    
-                    dist_no_egs, pred_no_egs = g_no_egs.bfs(agent_id)
+                pred, dist = self.dijkstras(g_no_egs, agent_id, self.edge_cost)
 
-                    non_exit_node_edge_count_lookup = {}
-                    for node in nodes_connected_to_multiple_exit_gateways.keys():
-                        non_exit_node_edge_count_lookup[node] = len([e for e in g.edges[node] if e not in self.exit_gateways])
+                #Throw away the connected count?
+                nodes_connected_to_multiple_exit_gateways = nodes_connected_to_multiple_exit_gateways.keys()
+
+                nodes_connected_to_multiple_exit_gateways_dist_lookup = {n : dist[n] for n in nodes_connected_to_multiple_exit_gateways}
+                #TODO verifiera denna för den verkar inte rätt för complex mesh mapen.... nodes_connected_to_multiple_exit_gateways_dist_lookup
+                # dist till 27 skall bara bara 1. 
+                # bfs går via exit noderna och det är fel.. 
+
+                #nodes_connected_to_multiple_exit_gateways_connected_count_lookup = {n : len(g.edges[n]) for n in nodes_connected_to_multiple_exit_gateways}
 
 
-                    #TODO increase urgency by considering how many nodes along the way that are connected to exit nodes. They are forcing moves.
-                    #TODO no point in using the dist from dist_no_egs since it can contain forcing moves. 
-                    urgency_lookup = {}
-                    for node in nodes_connected_to_multiple_exit_gateways.keys():
-                        #assume distance is never more than 100
-                        urgency_lookup[node] = (non_exit_node_edge_count_lookup[node]*1000) + 100 - dist_no_egs[node]
+                most_urgent_node = sorted(nodes_connected_to_multiple_exit_gateways_dist_lookup.items(), key=lambda item:item[1])[0][0]
 
-                    most_urgent_node = sorted(urgency_lookup.items(), key=lambda item:item[1], reverse=True)[0][0]
-                    potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
-                    eg = next(iter(potential_exit_gateways))
+                potential_exit_gateways = set(g.edges[most_urgent_node]) & set(self.exit_gateways)
+                eg = next(iter(potential_exit_gateways))
 
-                    u = most_urgent_node
-                    v = eg
+                u = most_urgent_node
+                v = eg
+
+
 
         assert u is not None
         assert v is not None

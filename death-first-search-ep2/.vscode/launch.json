@@ -11,7 +11,7 @@
             "program": "main.py",
             "args": [
                 "<",
-                "tests/test_files/06_bobnet_core_network_input.txt"
+                "tests/test_files/05_complex_mesh_input.txt"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
