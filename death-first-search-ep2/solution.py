@@ -48,43 +48,32 @@ class Solution:
     def dijkstras(self, g:Graph, start_node:object, edge_cost_func:Callable[[object, object], int]):
         unvisited_nodes = list(g.nodes)
     
-        # We'll use this dict to save the cost of visiting each node and update it as we move along the graph   
         dist = {}
-    
-        # We'll use this dict to save the shortest known path to a node found so far
         prev = {}
     
-        # We'll use max_value to initialize the "infinity" value of the unvisited nodes   
         max_value = sys.maxsize
         for node in unvisited_nodes:
             dist[node] = max_value
-        # However, we initialize the starting node's value with 0   
+
         dist[start_node] = 0
         
-        # The algorithm executes until we visit all nodes
         while unvisited_nodes:
-            # The code block below finds the node with the lowest score
             current_min_node = None
-            for node in unvisited_nodes: # Iterate over the nodes
+            for node in unvisited_nodes:
                 if current_min_node == None:
                     current_min_node = node
                 elif dist[node] < dist[current_min_node]:
                     current_min_node = node
                     
-            # The code block below retrieves the current node's neighbors and updates their distances
             neighbors = g.edges[current_min_node]
             for neighbor in neighbors:
                 
                 tentative_value = dist[current_min_node] + edge_cost_func(current_min_node, neighbor)
-                #tentative_value = dist[current_min_node] + g.value(current_min_node, neighbor)
                 if tentative_value < dist[neighbor]:
                     dist[neighbor] = tentative_value
-                    # We also update the best path to the current node
                     prev[neighbor] = current_min_node
     
-            # After visiting its neighbors, we mark the node as "visited"
             unvisited_nodes.remove(current_min_node)
-        
         return prev, dist
 
 
