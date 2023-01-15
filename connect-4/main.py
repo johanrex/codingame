@@ -22,33 +22,36 @@ class State:
     def __init__(self, board) -> None:
         self.board: str = board
 
+    def __str__(self) -> str:
+        s = ""
+        for i in range(ROW_COUNT):
+            s += self.board[i * COL_COUNT : (i + 1) * COL_COUNT] + "\n"
+        return s
+
+
     def print_state(self):
-        for i in range(ROW_COUNT):
-            print(self.board[i * COL_COUNT : (i + 1) * COL_COUNT])
+        print(self.__str__())
 
-    def __next_state(self, board: str, player_id: int, col: int) -> "State":
+    def __next_state(self, player_id: int, col: int) -> "State":
         assert col >= 0 and col < COL_COUNT
-        assert board[col] == "."
+        assert self.board[col] == "."
 
+        next_board = None
         for i in range(ROW_COUNT):
-            if board[i * COL_COUNT + col] != ".":
-                board = board[: (i - 1) * COL_COUNT + col] + str(player_id) + board[(i - 1) * COL_COUNT + col + 1 :]
-                return board
+            if self.board[i * COL_COUNT + col] != ".":
+                next_board = self.board[: (i - 1) * COL_COUNT + col] + str(player_id) + self.board[(i - 1) * COL_COUNT + col + 1 :]
+                break
 
-        board = board[: COL_COUNT - 1] + str(player_id) + board[COL_COUNT:]
+        #board = board[: COL_COUNT - 1] + str(player_id) + board[COL_COUNT:]
 
-        state = State()
-        state.board = board
-        state.col = col
-        return state
+        next_state = State(next_board)
+        return next_state
 
     def __next_state_steal(self, board: str, player_id: int) -> "State":
         old_id = 0 if player_id == 1 else 1
         board = board.replace(str(old_id), str(player_id))
 
-        state = State()
-        state.board = board
-        state.col = STEAL
+        state = State(board)
         return state
 
     def next_states(self, turn_idx: int, player_id: int, valid_columns: list[int]) -> list:
@@ -57,7 +60,7 @@ class State:
             states.append(self.__next_state_steal(self.board, player_id))
 
         for col in valid_columns:
-            next_state = self.__next_state(self.board, player_id, col)
+            next_state = self.__next_state(player_id, col)
             if next_state is not None:
                 states.append(next_state)
 
@@ -120,35 +123,40 @@ def gen_tree():
 
     return root
 
-root = None
-parent = None
+def main():
+    root = None
+    parent = None
 
-# my_id: 0 or 1 (Player 0 plays first)
-# opp_id: if your index is 0, this will be 1, and vice versa
-my_id, opp_id = [int(i) for i in logged_input().split()]
+    # my_id: 0 or 1 (Player 0 plays first)
+    # opp_id: if your index is 0, this will be 1, and vice versa
+    my_id, opp_id = [int(i) for i in logged_input().split()]
 
-root = gen_tree()
+    root = gen_tree()
 
 
-while True:
-    turn_index = int(logged_input())  # starts from 0; As the game progresses, first player gets [0,2,4,...] and second player gets [1,3,5,...]
-    current_state = State.get_state_from_input()
+    while True:
+        turn_index = int(logged_input())  # starts from 0; As the game progresses, first player gets [0,2,4,...] and second player gets [1,3,5,...]
+        current_state = State.get_state_from_input()
 
-    current_node = TreeNode(current_state)
-    if root is None:
-        root = current_node
+        current_node = TreeNode(current_state)
+        if root is None:
+            root = current_node
 
-    num_valid_actions = int(logged_input())  # number of unfilled columns in the board
-    valid_columns = []
-    for i in range(num_valid_actions):
-        col = int(logged_input())  # a valid column index into which a chip can be dropped
-        valid_columns.append(col)
-    opp_previous_action = int(logged_input())  # opponent's previous chosen column index (will be -1 for first player in the first turn)
+        num_valid_actions = int(logged_input())  # number of unfilled columns in the board
+        valid_columns = []
+        for i in range(num_valid_actions):
+            col = int(logged_input())  # a valid column index into which a chip can be dropped
+            valid_columns.append(col)
+        opp_previous_action = int(logged_input())  # opponent's previous chosen column index (will be -1 for first player in the first turn)
 
-    next_states = current_state.next_states(turn_index,my_id, valid_columns)
+        next_states = current_state.next_states(turn_index,my_id, valid_columns)
 
-    for child_state in next_states:
-        current_node.add_child(child_state)
+        for child_state in next_states:
+            current_node.add_child(child_state)
 
-    # Output a column index to drop the chip in. Append message to show in the viewer.
-    print(random.choice(valid_columns))
+        # Output a column index to drop the chip in. Append message to show in the viewer.
+        print(random.choice(valid_columns))
+
+if __name__ == "__main__":
+    main()
+
