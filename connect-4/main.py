@@ -38,11 +38,10 @@ class State:
 
         next_board = None
         for i in range(ROW_COUNT):
-            if self.board[i * COL_COUNT + col] != ".":
-                next_board = self.board[: (i - 1) * COL_COUNT + col] + str(player_id) + self.board[(i - 1) * COL_COUNT + col + 1 :]
+            offset = (ROW_COUNT -1 - i) * COL_COUNT + col
+            if self.board[offset] == ".":
+                next_board = self.board[: offset] + str(player_id) + self.board[offset+1:]
                 break
-
-        #board = board[: COL_COUNT - 1] + str(player_id) + board[COL_COUNT:]
 
         next_state = State(next_board)
         return next_state
