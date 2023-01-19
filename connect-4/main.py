@@ -19,28 +19,29 @@ def logged_input():
 
 
 class State:
-    def __init__(self, board) -> None:
-        self.board: str = board
+    def __init__(self, board, is_win=False) -> None:
+        self._board: str = board
+        self._is_win:bool = is_win
 
     def __str__(self) -> str:
         s = ""
         for i in range(ROW_COUNT):
-            s += self.board[i * COL_COUNT : (i + 1) * COL_COUNT] + "\n"
+            s += self._board[i * COL_COUNT : (i + 1) * COL_COUNT] + "\n"
         return s
 
 
     def print_state(self):
         print(self.__str__())
 
-    def __next_state(self, player_id: int, col: int) -> "State":
+    def _next_state(self, player_id: int, col: int) -> "State":
         assert col >= 0 and col < COL_COUNT
-        assert self.board[col] == "."
+        assert self._board[col] == "."
 
         next_board = None
-        for i in range(ROW_COUNT):
-            offset = (ROW_COUNT -1 - i) * COL_COUNT + col
-            if self.board[offset] == ".":
-                next_board = self.board[: offset] + str(player_id) + self.board[offset+1:]
+        for row in range(ROW_COUNT):
+            offset = (ROW_COUNT -1 - row) * COL_COUNT + col
+            if self._board[offset] == ".":
+                next_board = self._board[: offset] + str(player_id) + self._board[offset+1:]
                 break
 
         next_state = State(next_board)
@@ -56,14 +57,43 @@ class State:
     def next_states(self, turn_idx: int, player_id: int, valid_columns: list[int]) -> list:
         states = []
         if turn_idx == 0:
-            states.append(self.__next_state_steal(self.board, player_id))
+            states.append(self.__next_state_steal(self._board, player_id))
 
         for col in valid_columns:
-            next_state = self.__next_state(player_id, col)
+            next_state = self._next_state(player_id, col)
             if next_state is not None:
                 states.append(next_state)
 
         return states
+
+    def _is_horizontal_win(self, row, col, player_id) -> bool:
+        start = col - 3 if col - 3 > 0 else 0
+        end = col + 3 if col +3 < COL_COUNT else COL_COUNT - 1
+        same_count = 0
+        row_offset = (ROW_COUNT -1 - row) * COL_COUNT
+        for idx in range(row_offset + start, row_offset + end+1):
+            c = self._board[idx]
+            if c == str(player_id):
+                same_count += 1
+                if same_count == 4:
+                    return True
+            else:
+                same_count = 0
+        return False
+
+    def is_win(self, row, col, player_id) -> bool:
+        if self._is_horizontal_win(row, col, player_id):
+            return True
+
+
+        #vertical
+        #diagonal left
+        #diagonal right
+
+        #like-count. 
+
+        return False
+
 
     @classmethod
     def get_state_from_input(cls) -> "State":
@@ -128,6 +158,7 @@ def main():
 
     # my_id: 0 or 1 (Player 0 plays first)
     # opp_id: if your index is 0, this will be 1, and vice versa
+    #TODO make id str, no point in int when state is stored as string
     my_id, opp_id = [int(i) for i in logged_input().split()]
 
     root = gen_tree()
