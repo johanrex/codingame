@@ -1,9 +1,0 @@
-{
-    "python.analysis.typeCheckingMode": "basic",
-    "terminal.integrated.defaultProfile.windows": "Command Prompt",
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
-}
