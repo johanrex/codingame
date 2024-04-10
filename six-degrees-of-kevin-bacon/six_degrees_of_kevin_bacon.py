@@ -2,9 +2,7 @@
 # https://www.codingame.com/ide/puzzle/six-degrees-of-kevin-bacon
 
 import sys
-import math
-import json
-
+from collections import deque
 from dataclasses import dataclass
 
 
@@ -58,7 +56,7 @@ def build_graph(movies) -> dict[str, Node]:
     return g
 
 
-def dfs(g, actor, curr_path, shortest_path=sys.maxsize):
+def dfs(g: dict[str, Node], actor, curr_path, shortest_path=sys.maxsize):
     curr_path.append(actor)
 
     if len(curr_path) < shortest_path:
@@ -80,8 +78,32 @@ def dfs(g, actor, curr_path, shortest_path=sys.maxsize):
     return shortest_path
 
 
-def get_bacon_nr(source_actor, g):
-    shortest_path = dfs(g, source_actor, [])
+def bfs(g: dict[str, Node], source_actor: str) -> int:
+    shortest_path = sys.maxsize
+
+    visited = {source_actor}
+    q = deque([(source_actor, 1)])
+
+    while len(q) > 0:
+        actor, distance = q.popleft()
+
+        # prune long paths
+        if distance > shortest_path:
+            continue
+
+        if actor == "Kevin Bacon":
+            shortest_path = distance
+
+        for neighbor in g[actor].neighbors:
+            if neighbor not in visited:
+                q.append((neighbor, distance + 1))
+
+    return shortest_path
+
+
+def get_bacon_nr(source_actor: str, g: dict[str, Node]):
+    # shortest_path = dfs(g, source_actor, [])
+    shortest_path = bfs(g, source_actor)
 
     bacon_nr = shortest_path - 1
     return bacon_nr
