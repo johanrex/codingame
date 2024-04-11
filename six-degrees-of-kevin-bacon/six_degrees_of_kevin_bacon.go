@@ -28,7 +28,7 @@ func parseMovieLine(line string) (string, map[string]bool) {
 	tmp := strings.Split(line, ":")
 	title := tmp[0]
 	actors := strings.Split(tmp[1], ",")
-	actorSet := make(map[string]bool)
+	actorSet := map[string]bool{}
 	for _, actor := range actors {
 		actorSet[strings.TrimSpace(actor)] = true
 	}
@@ -36,8 +36,7 @@ func parseMovieLine(line string) (string, map[string]bool) {
 }
 
 func parseInput() (string, map[string]map[string]bool) {
-	movies := make(map[string]map[string]bool)
-
+	movies := map[string]map[string]bool{}
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	sourceActor := scanner.Text()
@@ -56,10 +55,10 @@ func parseInput() (string, map[string]map[string]bool) {
 }
 
 func buildGraph(movies map[string]map[string]bool) map[string]*Node {
-	g := make(map[string]*Node)
+	g := map[string]*Node{}
 	for _, actors := range movies {
 		for actor := range actors {
-			neighbors := make(map[string]bool)
+			neighbors := map[string]bool{}
 			for neighbor := range actors {
 				if neighbor != actor {
 					neighbors[neighbor] = true
@@ -81,7 +80,7 @@ func buildGraph(movies map[string]map[string]bool) map[string]*Node {
 func bfs(g map[string]*Node, sourceActor string) int {
 	shortestPath := math.MaxInt64
 
-	visited := make(map[string]bool)
+	visited := map[string]bool{}
 	visited[sourceActor] = true
 
 	q := list.New()
