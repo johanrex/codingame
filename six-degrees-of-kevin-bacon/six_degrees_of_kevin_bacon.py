@@ -56,6 +56,7 @@ def build_graph(movies) -> dict[str, Node]:
     return g
 
 
+# dfs alternative
 def dfs(g: dict[str, Node], actor, curr_path, shortest_path=sys.maxsize):
     curr_path.append(actor)
 
@@ -78,30 +79,36 @@ def dfs(g: dict[str, Node], actor, curr_path, shortest_path=sys.maxsize):
     return shortest_path
 
 
+# bfs alternative
 def bfs(g: dict[str, Node], source_actor: str) -> int:
-    shortest_path = sys.maxsize
+    bacon_nr = sys.maxsize
 
-    visited = {source_actor}
-    q = deque([(source_actor, 1)])
+    tpl = (source_actor, 1)
+    q: deque[tuple[str, int]] = deque()
+    q.append(tpl)
+
+    visited = set(source_actor)
 
     while len(q) > 0:
-        actor, distance = q.popleft()
+        tpl = q.popleft()
+        curr_actor, dist_from_source = tpl
 
         # prune long paths
-        if distance > shortest_path:
+        if dist_from_source > bacon_nr:
             continue
 
-        if actor == "Kevin Bacon":
-            shortest_path = distance
+        if curr_actor == "Kevin Bacon":
+            bacon_nr = dist_from_source
 
-        for neighbor in g[actor].neighbors:
-            if neighbor not in visited:
-                q.append((neighbor, distance + 1))
+        node = g[curr_actor]
+        for neighbor_name in node.neighbors:
+            if neighbor_name not in visited:
+                q.append((neighbor_name, dist_from_source + 1))
 
-    return shortest_path
+    return bacon_nr
 
 
-def get_bacon_nr(source_actor: str, g: dict[str, Node]):
+def get_bacon_nr(source_actor: str, g: dict[str, Node]) -> int:
     # shortest_path = dfs(g, source_actor, [])
     shortest_path = bfs(g, source_actor)
 
